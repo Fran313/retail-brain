@@ -19,7 +19,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: retail_brain_db
+      POSTGRES_DB: retailBrain
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
