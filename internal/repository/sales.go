@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Fran313/retailBrain/config"
+	"github.com/Fran313/retailBrain/internal/database"
 	"github.com/Fran313/retailBrain/internal/model"
 	"github.com/jackc/pgx/v5"
 )
 
 func InsertSalesBulk(sales []model.Sale) error {
-	conn, err := config.DB.Acquire(context.Background())
+	conn, err := database.DB.Acquire(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to acquire DB connection: %w", err)
 	}
