@@ -3,6 +3,7 @@ package excel
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/Fran313/retailBrain/internal/model"
 	"github.com/xuri/excelize/v2"
@@ -40,9 +41,9 @@ func ReadSalesFromExcel(path string) ([]model.Sale, error) {
 		unitsVarLYC, _ := strconv.ParseFloat(row[10], 64)
 
 		sale := model.Sale{
-			Store:         row[0],
-			Section:       row[1],
-			Product:       row[2],
+			Store:         strings.ToUpper(strings.TrimSpace(row[0])),
+			Section:       strings.ToUpper(strings.TrimSpace(row[1])),
+			Product:       strings.ToUpper(strings.TrimSpace(row[2])),
 			ProductID:     productID,
 			NetSale:       netSale,
 			NetSaleVarLYC: netSaleVarLYC,
