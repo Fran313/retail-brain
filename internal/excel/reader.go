@@ -9,6 +9,30 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+func cleanNumberFormat(value string) string {
+	// Elimina espacios al inicio y final
+	value = strings.TrimSpace(value)
+
+	// Si está vacío después de trim, retorna "0"
+	if value == "" {
+		return "0"
+	}
+
+	// Elimina el símbolo % si existe
+	value = strings.TrimSuffix(value, "%")
+	value = strings.TrimSpace(value) // Elimina espacios que quedaron
+
+	// Si queda vacío después de quitar %, retorna "0"
+	if value == "" {
+		return "0"
+	}
+
+	// Elimina separadores de miles (comas)
+	value = strings.ReplaceAll(value, ",", "")
+
+	return value
+}
+
 func ReadSalesFromExcel(path string) ([]model.Sale, error) {
 	file, err := excelize.OpenFile(path)
 	if err != nil {
@@ -24,21 +48,53 @@ func ReadSalesFromExcel(path string) ([]model.Sale, error) {
 	var sales []model.Sale
 
 	for i, row := range rows {
-		if i == 0 {
-			continue // Skip header
+		if i < 2 {
+			continue // Skip first 2 rows (empty + headers)
 		}
 		if len(row) < 11 {
 			continue // Incomplete row
 		}
 
-		productID, _ := strconv.Atoi(row[3])
-		netSale, _ := strconv.ParseFloat(row[4], 64)
-		netSaleVarLYC, _ := strconv.ParseFloat(row[5], 64)
-		units, _ := strconv.Atoi(row[6])
-		unitsLY, _ := strconv.Atoi(row[7])
-		unitsVarLY, _ := strconv.ParseFloat(row[8], 64)
-		unitsLYC, _ := strconv.Atoi(row[9])
-		unitsVarLYC, _ := strconv.ParseFloat(row[10], 64)
+		// Manejo de errores con valores por defecto
+		productID, err := strconv.Atoi(strings.TrimSpace(row[3]))
+		if err != nil {
+			productID = 0
+		}
+
+		netSale, err := strconv.ParseFloat(cleanNumberFormat(row[4]), 64)
+		if err != nil {
+			netSale = 0.0
+		}
+
+		netSaleVarLYC, err := strconv.ParseFloat(cleanNumberFormat(row[5]), 64)
+		if err != nil {
+			netSaleVarLYC = 0.0
+		}
+
+		units, err := strconv.ParseFloat(cleanNumberFormat(row[6]), 64)
+		if err != nil {
+			units = 0.0
+		}
+
+		unitsLY, err := strconv.Atoi(strings.TrimSpace(row[7]))
+		if err != nil {
+			unitsLY = 0
+		}
+
+		unitsVarLY, err := strconv.ParseFloat(cleanNumberFormat(row[8]), 64)
+		if err != nil {
+			unitsVarLY = 0.0
+		}
+
+		unitsLYC, err := strconv.Atoi(strings.TrimSpace(row[9]))
+		if err != nil {
+			unitsLYC = 0
+		}
+
+		unitsVarLYC, err := strconv.ParseFloat(cleanNumberFormat(row[10]), 64)
+		if err != nil {
+			unitsVarLYC = 0.0
+		}
 
 		sale := model.Sale{
 			Store:         strings.ToUpper(strings.TrimSpace(row[0])),

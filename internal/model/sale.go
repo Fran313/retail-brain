@@ -7,7 +7,7 @@ type Sale struct {
 	ProductID     int     // id_producto
 	NetSale       float64 // Venta neta s/IVA
 	NetSaleVarLYC float64 // Var Venta Neta s/IVA LYC
-	Units         int     // Unidades
+	Units         float64 // Unidades
 	UnitsLY       int     // Unidades LY
 	UnitsVarLY    float64 // Var Unidades LY
 	UnitsLYC      int     // Unidades LYC
