@@ -35,7 +35,7 @@ func UploadExcelHandler(c *gin.Context) {
 
 	// Insert into database
 	if err := repository.InsertSalesBulk(sales); err != nil {
-		fmt.Printf("❌ INSERT FAILED: %v\n", err) // 👈 Agregá esto
+		fmt.Printf("❌ INSERT FAILED: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error":  "Failed to insert sales",
 			"detail": err.Error(),
